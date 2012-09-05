@@ -16,14 +16,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
+import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.keyboard.Keyboard;
+import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 
 /**
  *
  * @author ZNickq
  */
-public class PlayerPlus extends JavaPlugin implements Listener{
+public class PlayerPlus extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
@@ -33,9 +35,9 @@ public class PlayerPlus extends JavaPlugin implements Listener{
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 		getDataFolder().mkdir();
-		for(AccessoryType ttype : AccessoryType.values()) {
+		for (AccessoryType ttype : AccessoryType.values()) {
 			List<WebAccessory> aval = getAvailable(ttype);
-			for(WebAccessory wa : aval) {
+			for (WebAccessory wa : aval) {
 				SpoutManager.getFileManager().addToCache(this, wa.getUrl());
 			}
 		}
@@ -43,7 +45,7 @@ public class PlayerPlus extends JavaPlugin implements Listener{
 
 	public List<WebAccessory> getAvailable(AccessoryType type) {
 		List<WebAccessory> toRet = new ArrayList<WebAccessory>();
-		File adr = new File(getDataFolder(), type.toString().toLowerCase()+".yml");
+		File adr = new File(getDataFolder(), type.toString().toLowerCase() + ".yml");
 		try {
 			adr.createNewFile();
 		} catch (IOException ex) {
@@ -57,12 +59,52 @@ public class PlayerPlus extends JavaPlugin implements Listener{
 
 		return toRet;
 	}
-	
+
 	@EventHandler
 	public void onKeyPressed(KeyPressedEvent event) {
-		if(event.getKey() == Keyboard.KEY_U) {
+		if (event.getKey() == Keyboard.KEY_U) {
 			new TextureChooser(this, event.getPlayer());
 		}
 	}
 	
+	@EventHandler
+	public void onSpoutcraftAuth(SpoutCraftEnableEvent event) {
+		for(AccessoryType ttype : AccessoryType.values()) {
+			String url = get(event.getPlayer().getName(), ttype);
+			if(url != null) {
+				event.getPlayer().addAccessory(ttype, url);
+			}
+		}
+	}
+	
+	public String get(String player, AccessoryType type) {
+		File saveFile = new File(getDataFolder(), "saved.yml");
+		if (!saveFile.exists()) {
+			try {
+				saveFile.createNewFile();
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
+		return yFile.getString(player+"."+type.name());
+	}
+
+	public void save(SpoutPlayer player, AccessoryType type) {
+		File saveFile = new File(getDataFolder(), "saved.yml");
+		if (!saveFile.exists()) {
+			try {
+				saveFile.createNewFile();
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
+		yFile.set(player.getName()+"."+type.name()+"", player.getAccessoryURL(type));
+		try {
+			yFile.save(saveFile);
+		} catch (IOException ex) {
+			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }
