@@ -39,7 +39,7 @@ public class TextureChooser extends GenericPopup {
 		cb = new MyComboBox(this);
 		cb.setText("Accessories");
 		cb.setAnchor(WidgetAnchor.CENTER_CENTER);
-		cb.setX(-160).setY(-110);
+		cb.shiftXPos(-160).shiftYPos(-90);
 		cb.setHeight(20).setWidth(100);
 		cb.setSelection(0);
 		cb.setItems(getAvailableAccessories(player));
@@ -47,29 +47,29 @@ public class TextureChooser extends GenericPopup {
 		lw = new MyListWidget(this);
 		lw.setAnchor(WidgetAnchor.CENTER_CENTER);
 		lw.setHeight(150).setWidth(100);
-		lw.setX(-160).setY(-70);
+		lw.shiftXPos(-160).shiftYPos(-60);
 		updateList();
 
 		gt = new GenericTexture();
 		gt.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gt.setHeight(200).setWidth(200);
-		gt.setX(-10).setY(-110);
+		gt.shiftXPos(-40).shiftYPos(-110);
 		updateTexture();
 
 		GenericButton pre = new ActionButton("<", this, -1);
 		pre.setAnchor(WidgetAnchor.CENTER_CENTER);
 		pre.setHeight(20).setWidth(20);
-		pre.setX(-10).setY(80);
+		pre.shiftXPos(-40).shiftYPos(70);
 
 		GenericButton select = new ActionButton("Select", this, 0);
 		select.setAnchor(WidgetAnchor.CENTER_CENTER);
 		select.setHeight(20).setWidth(50);
-		select.setX(59).setY(80);
+		select.shiftXPos(19).shiftYPos(70);
 
 		GenericButton next = new ActionButton(">", this, 1);
 		next.setAnchor(WidgetAnchor.CENTER_CENTER);
 		next.setHeight(20).setWidth(20);
-		next.setX(148).setY(80);
+		next.shiftXPos(108).shiftYPos(70);
 
 		updateSelection();
 		
