@@ -13,6 +13,7 @@ import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.ListWidget;
 import org.getspout.spoutapi.gui.ListWidgetItem;
+import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
@@ -35,6 +36,12 @@ public class TextureChooser extends GenericPopup {
 		this.instance = instance;
 		this.player = player;
 		current = AccessoryType.BRACELET;
+		
+		GenericTexture border = new GenericTexture("http://www.pixentral.com/pics/1duZT49LzMnodP53SIPGIqZ8xdKS.png");
+		border.setAnchor(WidgetAnchor.CENTER_CENTER);
+		border.setPriority(RenderPriority.High);
+		border.setWidth(420).setHeight(345);
+		border.shiftXPos(-205).shiftYPos(-120);
 
 		cb = new MyComboBox(this);
 		cb.setText("Accessories");
@@ -70,10 +77,15 @@ public class TextureChooser extends GenericPopup {
 		next.setAnchor(WidgetAnchor.CENTER_CENTER);
 		next.setHeight(20).setWidth(20);
 		next.shiftXPos(108).shiftYPos(70);
-
+		
+		CloseButton close = new CloseButton(instance);
+		close.setAnchor(WidgetAnchor.CENTER_CENTER);
+		close.setHeight(15).setWidth(50);
+		close.shiftXPos(150).shiftYPos(95);
 		updateSelection();
 		
-		attachWidgets(instance, lw, cb, gt, pre, select, next);
+		attachWidgets(instance, border, lw, cb, gt, pre, select, next, close);
+		System.out.println("Say what");
 		player.getMainScreen().attachPopupScreen(this);
 	}
 
