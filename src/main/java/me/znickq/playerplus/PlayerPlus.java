@@ -66,7 +66,6 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onKeyPressed(KeyPressedEvent event) {
-		System.out.println("GG");
 		if (event.getKey() == Keyboard.KEY_U) {
 			new TextureChooser(this, event.getPlayer());
 		}

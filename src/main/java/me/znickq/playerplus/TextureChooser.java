@@ -85,7 +85,6 @@ public class TextureChooser extends GenericPopup {
 		updateSelection();
 		
 		attachWidgets(instance, border, lw, cb, gt, pre, select, next, close);
-		System.out.println("Say what");
 		player.getMainScreen().attachPopupScreen(this);
 	}
 
