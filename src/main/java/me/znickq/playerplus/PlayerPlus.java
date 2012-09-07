@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,30 +19,48 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
+import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 
 /**
  *
- * @author ZNickq
+ * @author ZNickq & Dockter
  */
 public class PlayerPlus extends JavaPlugin implements Listener {
 
+	private static PlayerPlus instance;
+	public static String hotkeys = null;
+	
+	public static PlayerPlus getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public void onDisable() {
 	}
 
 	@Override
-	public void onEnable() {
+	public void onEnable() {	
+		instance = this;
+		FileConfiguration config = this.getConfig();
+		config.addDefault("PromptTitle", "Player Plus Accessories");
+		config.addDefault("TitleX", 190);
+		config.addDefault("Hot_Key", "KEY_U");
+		config.addDefault("GUITexture", "http://www.pixentral.com/pics/1duZT49LzMnodP53SIPGIqZ8xdKS.png");
+		config.options().copyDefaults(true);
+		saveConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 		getDataFolder().mkdir();
 		for (AccessoryType ttype : AccessoryType.values()) {
 			List<WebAccessory> aval = getAvailable(ttype);
 			for (WebAccessory wa : aval) {
-				SpoutManager.getFileManager().addToCache(this, wa.getUrl());
+				SpoutManager.getFileManager().addToPreLoginCache(this, wa.getUrl());
 			}
 		}
+		hotkeys = config.getString("Hot_Key");
+		SpoutManager.getKeyBindingManager().registerBinding("PlayerPlus", Keyboard.valueOf(PlayerPlus.hotkeys), "Opens Player Plus Accessories", new InputHandler(), PlayerPlus.getInstance());
 	}
 
 	public List<WebAccessory> getAvailable(AccessoryType type) {
@@ -49,7 +69,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		try {
 			adr.createNewFile();
 			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);
-			temp.addDefault("Name", "URL");
+			// temp.addDefault("Name", "URL");
 			temp.options().copyDefaults(true);
 			temp.save(adr);
 		} catch (IOException ex) {
@@ -64,13 +84,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		return toRet;
 	}
 
-	@EventHandler
-	public void onKeyPressed(KeyPressedEvent event) {
-		if (event.getKey() == Keyboard.KEY_U) {
-			new TextureChooser(this, event.getPlayer());
-		}
-	}
-	
+		
 	@EventHandler
 	public void onSpoutcraftAuth(SpoutCraftEnableEvent event) {
 		for(AccessoryType ttype : AccessoryType.values()) {

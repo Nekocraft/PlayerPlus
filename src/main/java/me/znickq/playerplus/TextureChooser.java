@@ -7,8 +7,11 @@ package me.znickq.playerplus;
 import java.util.ArrayList;
 import java.util.List;
 import me.znickq.playerplus.widgets.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.ListWidget;
@@ -37,55 +40,67 @@ public class TextureChooser extends GenericPopup {
 		this.player = player;
 		current = AccessoryType.BRACELET;
 		
-		GenericTexture border = new GenericTexture("http://www.pixentral.com/pics/1duZT49LzMnodP53SIPGIqZ8xdKS.png");
+		GenericTexture border = new GenericTexture(PlayerPlus.getInstance().getConfig().getString("GUITexture"));
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(420).setHeight(345);
 		border.shiftXPos(-205).shiftYPos(-120);
 
+		GenericLabel label = new GenericLabel();
+		label.setText(PlayerPlus.getInstance().getConfig().getString("PromptTitle"));
+		label.setAnchor(WidgetAnchor.CENTER_CENTER);
+		label.shiftXPos(-50).shiftYPos(-112);	
+		label.setScale(1.2F).setWidth(-1).setHeight(-1);
+		
+		GenericLabel label1 = new GenericLabel();
+		label1.setText("Images represent the map of the image, not actual appearence.");
+		label1.setAnchor(WidgetAnchor.CENTER_CENTER);
+		label1.shiftXPos(-190).shiftYPos(100);	
+		label1.setScale(1.0F).setWidth(-1).setHeight(-1);
+		
 		cb = new MyComboBox(this);
 		cb.setText("Accessories");
 		cb.setAnchor(WidgetAnchor.CENTER_CENTER);
-		cb.shiftXPos(-160).shiftYPos(-90);
-		cb.setHeight(20).setWidth(100);
+		cb.shiftXPos(-190).shiftYPos(-90);
+		cb.setHeight(20).setWidth(150);
 		cb.setSelection(0);
 		cb.setItems(getAvailableAccessories(player));
 
 		lw = new MyListWidget(this);
 		lw.setAnchor(WidgetAnchor.CENTER_CENTER);
-		lw.setHeight(150).setWidth(100);
-		lw.shiftXPos(-160).shiftYPos(-60);
+		lw.setHeight(150).setWidth(150);		
+		lw.shiftXPos(-190).shiftYPos(-60);		
 		updateList();
 
 		gt = new GenericTexture();
 		gt.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gt.setHeight(200).setWidth(200);
-		gt.shiftXPos(-40).shiftYPos(-110);
-		updateTexture();
+		gt.setHeight(150).setWidth(150);
+		gt.shiftXPos(10).shiftYPos(-90);		
 
 		GenericButton pre = new ActionButton("<", this, -1);
 		pre.setAnchor(WidgetAnchor.CENTER_CENTER);
 		pre.setHeight(20).setWidth(20);
-		pre.shiftXPos(-40).shiftYPos(70);
+		pre.shiftXPos(10).shiftYPos(65);
 
 		GenericButton select = new ActionButton("Select", this, 0);
 		select.setAnchor(WidgetAnchor.CENTER_CENTER);
 		select.setHeight(20).setWidth(50);
-		select.shiftXPos(19).shiftYPos(70);
+		select.shiftXPos(55).shiftYPos(65);
 
 		GenericButton next = new ActionButton(">", this, 1);
 		next.setAnchor(WidgetAnchor.CENTER_CENTER);
 		next.setHeight(20).setWidth(20);
-		next.shiftXPos(108).shiftYPos(70);
+		next.shiftXPos(138).shiftYPos(65);
 		
 		CloseButton close = new CloseButton(instance);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-		close.setHeight(15).setWidth(50);
+		close.setHeight(20).setWidth(50);
 		close.shiftXPos(150).shiftYPos(95);
 		updateSelection();
 		
-		attachWidgets(instance, border, lw, cb, gt, pre, select, next, close);
+		attachWidgets(instance, border, label, label1, lw, cb, gt, pre, select, next, close);
 		player.getMainScreen().attachPopupScreen(this);
+		updateTexture();
 	}
 
 	public void updateTexture() {
@@ -136,11 +151,11 @@ public class TextureChooser extends GenericPopup {
 		if (id == 0) {
 			if (lw.getSelectedRow() > 0) {
 				player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
-			} else {
-				System.out.println("Removing!");
+			} else {				
 				player.removeAccessory(current);
 			}
-			player.sendNotification("Set Accessory", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
+			player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
+			player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");
 			instance.save(player, current);
 			return;
 		}

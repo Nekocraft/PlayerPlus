@@ -2,3 +2,4 @@ name: PlayerPlus
 main: me.znickq.playerplus.PlayerPlus
 version: 0.1
 authors: [ZNickq]
+depend: [Spout]
