@@ -67,7 +67,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 	}
 
 	public List<WebAccessory> getAvailable(AccessoryType type) {
-		List<WebAccessory> toRet = new ArrayList<WebAccessory>();
+		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
 		File adr = new File(getDataFolder(), type.toString().toLowerCase() + ".yml");
 		try {
 			adr.createNewFile();
@@ -87,6 +87,26 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		return toRet;
 	}
 
+	public List<WebAccessory> getCapes() {
+		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
+		File adr = new File(getDataFolder(), "capes.yml");
+		try {
+			adr.createNewFile();
+			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);
+			//temp.addDefault("Name", "URL");
+			temp.options().copyDefaults(true);
+			temp.save(adr);
+		} catch (IOException ex) {
+			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		YamlConfiguration ycf = YamlConfiguration.loadConfiguration(adr);
+		for (String name : ycf.getKeys(false)) {
+			toRet.add(new WebAccessory(name, ycf.getString(name)));
+		}
+
+		return toRet;
+	}
 
 	@EventHandler
 	public void onSpoutcraftAuth(SpoutCraftEnableEvent event) {
@@ -137,7 +157,9 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 			} catch (IOException ex) {
 				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
+		 }
+		//ToDo: Add saving for Capes and Titles
+		
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		yFile.set(player.getName()+"."+type.name()+"", player.getAccessoryURL(type));
 		try {

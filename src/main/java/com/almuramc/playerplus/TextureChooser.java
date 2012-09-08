@@ -37,12 +37,15 @@ public class TextureChooser extends GenericPopup {
 	private GenericTexture gt;
 	private AccessoryType current;
 	private List<WebAccessory> list;
+	private String currentAddon;
+	private int addonType = 1;
 
 	public TextureChooser(PlayerPlus instance, SpoutPlayer player) {
 		this.instance = instance;
 		this.player = player;
 		current = AccessoryType.BRACELET;
-		
+		currentAddon = null;
+
 		GenericTexture border = new GenericTexture(PlayerPlus.getInstance().getConfig().getString("GUITexture"));
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
@@ -54,13 +57,13 @@ public class TextureChooser extends GenericPopup {
 		label.setAnchor(WidgetAnchor.CENTER_CENTER);
 		label.shiftXPos(-50).shiftYPos(-112);	
 		label.setScale(1.2F).setWidth(-1).setHeight(-1);
-		
+
 		GenericLabel label1 = new GenericLabel();
 		label1.setText("Images represent the map of the image, not actual appearence.");
 		label1.setAnchor(WidgetAnchor.CENTER_CENTER);
 		label1.shiftXPos(-190).shiftYPos(100);	
 		label1.setScale(1.0F).setWidth(-1).setHeight(-1);
-		
+
 		cb = new MyComboBox(this);
 		cb.setText("Accessories");
 		cb.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -73,7 +76,7 @@ public class TextureChooser extends GenericPopup {
 		lw.setAnchor(WidgetAnchor.CENTER_CENTER);
 		lw.setHeight(150).setWidth(150);		
 		lw.shiftXPos(-190).shiftYPos(-60);		
-		
+
 		gt = new GenericTexture();
 		gt.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gt.setHeight(150).setWidth(150);
@@ -94,13 +97,13 @@ public class TextureChooser extends GenericPopup {
 		next.setAnchor(WidgetAnchor.CENTER_CENTER);
 		next.setHeight(20).setWidth(20);
 		next.shiftXPos(138).shiftYPos(65);
-		
+
 		CloseButton close = new CloseButton(instance);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(20).setWidth(50);
 		close.shiftXPos(150).shiftYPos(95);
 		updateSelection();
-		
+
 		attachWidgets(instance, border, label, label1, lw, cb, gt, pre, select, next, close);
 		player.getMainScreen().attachPopupScreen(this);
 		updateTexture();
@@ -112,7 +115,7 @@ public class TextureChooser extends GenericPopup {
 			gt.setUrl("");
 		} else {
 			gt.setUrl(list.get(sel - 1).getUrl());
-		}
+		}		
 		gt.setDirty(true);
 	}
 
@@ -125,17 +128,29 @@ public class TextureChooser extends GenericPopup {
 		}
 		lw.setDirty(true);
 	}
+	
+	public void updateCapesList() {
+		lw.clear();
+		list = instance.getCapes();
+		lw.addItem(new ListWidgetItem("None", ""));
+		for (WebAccessory toAdd : list) {
+			lw.addItem(new ListWidgetItem(toAdd.getName(), "", toAdd.getUrl()));
+		}
+		lw.setDirty(true);
+	}
 
 	private void updateDropdown() {
 		List<String> available = new ArrayList<String>();
 		for (AccessoryType type : AccessoryType.values()) {
-			available.add(type.name().toLowerCase());
-			Collections.sort(available, String.CASE_INSENSITIVE_ORDER);
-			cb.setItems(available);
-			cb.setDirty(true);
+			available.add(type.name().toLowerCase());			
 		}
+		available.add("capes");
+		available.add("titles");
+		Collections.sort(available, String.CASE_INSENSITIVE_ORDER);
+		cb.setItems(available);
+		cb.setDirty(true);
 	}
-	
+
 	private List<String> getAvailableAccessories(SpoutPlayer player) {
 		List<String> available = new ArrayList<String>();
 		for (AccessoryType type : AccessoryType.values()) {
@@ -144,19 +159,31 @@ public class TextureChooser extends GenericPopup {
 		}
 		return available;
 	}
-	
+
 	public void onSelected(String item) {
 		if (lw != null && item != null) {			
-			current = AccessoryType.valueOf((item.toUpperCase()));			
-			updateList();
-			updateSelection();
-			updateTexture();
-			
-			if (player.hasPermission("PlayerPlus.use." + current)) {
-				select.setEnabled(true);
-			} else {
-				select.setEnabled(false);
+			System.out.println("Item:" + item);
+			if(item.equalsIgnoreCase("bracelet")  || item.equalsIgnoreCase("ears")  || item.equalsIgnoreCase("notchhat")  || item.equalsIgnoreCase("sunglasses")  || item.equalsIgnoreCase("tail")   || item.equalsIgnoreCase("tophat")  ||  item.equalsIgnoreCase("wings")) { 
+				current = AccessoryType.valueOf((item.toUpperCase()));			
+				addonType = 1;
+				updateList();
+				updateSelection();
+				updateTexture();
+				if (player.hasPermission("PlayerPlus.use." + current)) {
+					select.setEnabled(true);
+				} else {
+					select.setEnabled(false);
+				}
 			}
+			if (item == "capes") {
+				currentAddon = item;
+				addonType = 2;
+				updateCapesList();
+				updateSelection();
+				updateTexture();
+				
+			}
+			
 		}
 	}
 
@@ -167,13 +194,29 @@ public class TextureChooser extends GenericPopup {
 	public void onActionClick(int id) {
 		if (id == 0) {
 			if (lw.getSelectedRow() > 0) {
-				player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
+				System.out.println("Selection: " + cb.getText());
+				if (addonType == 2) {
+					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());
+					//player.setTitle(ChatColor.GOLD + "~Dockter\n" + ChatColor.BLUE + "Almura Moderator");
+					
+				} else {
+					player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
+					instance.save(player, current);
+				}
 			} else {				
-				player.removeAccessory(current);
+				if (addonType == 2) {
+					player.resetCape();
+				} else {
+					player.removeAccessory(current);
+					instance.save(player, current);
+				}
 			}
+			System.out.println("Cape: " + player.getCape());
+			System.out.println("Cape: " + player.getTitle());
+			
 			player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
 			player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");
-			instance.save(player, current);
+			
 			return;
 		}
 		int cuRow = lw.getSelectedRow();
@@ -189,9 +232,12 @@ public class TextureChooser extends GenericPopup {
 		updateTexture();
 	}
 
+	@SuppressWarnings("unused")
 	private void updateSelection() {
 		int which = 0;
-		String url = player.getAccessoryURL(current);
+		String url = null;
+		//url = player.getAccessoryURL(current);
+		
 		if(url == null) {
 			lw.setSelection(which);
 			return;
