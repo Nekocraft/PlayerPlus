@@ -162,7 +162,6 @@ public class TextureChooser extends GenericPopup {
 
 	public void onSelected(String item) {
 		if (lw != null && item != null) {			
-			System.out.println("Item:" + item);
 			if(item.equalsIgnoreCase("bracelet")  || item.equalsIgnoreCase("ears")  || item.equalsIgnoreCase("notchhat")  || item.equalsIgnoreCase("sunglasses")  || item.equalsIgnoreCase("tail")   || item.equalsIgnoreCase("tophat")  ||  item.equalsIgnoreCase("wings")) { 
 				current = AccessoryType.valueOf((item.toUpperCase()));			
 				addonType = 1;
@@ -181,7 +180,11 @@ public class TextureChooser extends GenericPopup {
 				updateCapesList();
 				updateSelection();
 				updateTexture();
-				
+				if (player.hasPermission("PlayerPlus.use." + item)) {
+					select.setEnabled(true);
+				} else {
+					select.setEnabled(false);
+				}
 			}
 			
 		}
@@ -201,7 +204,7 @@ public class TextureChooser extends GenericPopup {
 					
 				} else {
 					player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
-					instance.save(player, current);
+					instance.save(player, current);					
 				}
 			} else {				
 				if (addonType == 2) {
@@ -232,11 +235,14 @@ public class TextureChooser extends GenericPopup {
 		updateTexture();
 	}
 
-	@SuppressWarnings("unused")
+	
 	private void updateSelection() {
 		int which = 0;
 		String url = null;
-		//url = player.getAccessoryURL(current);
+		
+		// Todo:  Update to support Capes and Titles
+		
+		url = player.getAccessoryURL(current);
 		
 		if(url == null) {
 			lw.setSelection(which);
