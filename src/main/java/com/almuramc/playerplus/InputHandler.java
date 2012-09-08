@@ -24,7 +24,7 @@
  * <http://www.gnu.org/licenses/> for the GNU General Public License and
  * the GNU Lesser Public License.
  */
-package me.znickq.playerplus;
+package com.almuramc.playerplus;
 
 import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
@@ -46,7 +46,9 @@ public class InputHandler implements BindingExecutionDelegate {
 		}
 		
 		SpoutPlayer sPlayer = keyBindingEvent.getPlayer();		
-		new TextureChooser(PlayerPlus.getInstance(), keyBindingEvent.getPlayer());
+		if(sPlayer.hasPermission("playerplus.use")) {
+			new TextureChooser(PlayerPlus.getInstance(), keyBindingEvent.getPlayer());
+		}
 
 	}
 

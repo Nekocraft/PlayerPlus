@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.znickq.playerplus.widgets;
+package com.almuramc.playerplus.widgets;
 
 import org.getspout.spoutapi.gui.GenericListWidget;
-import me.znickq.playerplus.TextureChooser;
 import org.getspout.spoutapi.gui.GenericComboBox;
+
+import com.almuramc.playerplus.TextureChooser;
 
 /**
  *
@@ -22,6 +23,6 @@ public class MyComboBox extends GenericComboBox{
 	@Override
 	public void onSelectionChanged(int i, String text) {
 		super.onSelectionChanged(i, text);
-		base.onSelected(i);
+		base.onSelected(text);
 	}
 }

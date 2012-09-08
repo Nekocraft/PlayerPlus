@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.znickq.playerplus;
+package com.almuramc.playerplus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import me.znickq.playerplus.widgets.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,6 +21,8 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 
+import com.almuramc.playerplus.widgets.*;
+
 /**
  *
  * @author ZNickq
@@ -30,6 +32,7 @@ public class TextureChooser extends GenericPopup {
 	private PlayerPlus instance;
 	private SpoutPlayer player;
 	private ListWidget lw;
+	private GenericButton select;
 	private MyComboBox cb;
 	private GenericTexture gt;
 	private AccessoryType current;
@@ -63,15 +66,14 @@ public class TextureChooser extends GenericPopup {
 		cb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cb.shiftXPos(-190).shiftYPos(-90);
 		cb.setHeight(20).setWidth(150);
-		cb.setSelection(0);
-		cb.setItems(getAvailableAccessories(player));
+		cb.setSelection(0);		
+		updateDropdown();		
 
 		lw = new MyListWidget(this);
 		lw.setAnchor(WidgetAnchor.CENTER_CENTER);
 		lw.setHeight(150).setWidth(150);		
 		lw.shiftXPos(-190).shiftYPos(-60);		
-		updateList();
-
+		
 		gt = new GenericTexture();
 		gt.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gt.setHeight(150).setWidth(150);
@@ -82,10 +84,11 @@ public class TextureChooser extends GenericPopup {
 		pre.setHeight(20).setWidth(20);
 		pre.shiftXPos(10).shiftYPos(65);
 
-		GenericButton select = new ActionButton("Select", this, 0);
+		select = new ActionButton("Select", this, 0);
 		select.setAnchor(WidgetAnchor.CENTER_CENTER);
 		select.setHeight(20).setWidth(50);
 		select.shiftXPos(55).shiftYPos(65);
+		select.setEnabled(false);
 
 		GenericButton next = new ActionButton(">", this, 1);
 		next.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -117,29 +120,43 @@ public class TextureChooser extends GenericPopup {
 		lw.clear();
 		list = instance.getAvailable(current);
 		lw.addItem(new ListWidgetItem("None", ""));
-
-
 		for (WebAccessory toAdd : list) {
 			lw.addItem(new ListWidgetItem(toAdd.getName(), "", toAdd.getUrl()));
 		}
 		lw.setDirty(true);
 	}
 
-	private List<String> getAvailableAccessories(SpoutPlayer player) {
-		//TODO Dockter, good place to put permision check in ^^
+	private void updateDropdown() {
 		List<String> available = new ArrayList<String>();
 		for (AccessoryType type : AccessoryType.values()) {
 			available.add(type.name().toLowerCase());
+			Collections.sort(available, String.CASE_INSENSITIVE_ORDER);
+			cb.setItems(available);
+			cb.setDirty(true);
+		}
+	}
+	
+	private List<String> getAvailableAccessories(SpoutPlayer player) {
+		List<String> available = new ArrayList<String>();
+		for (AccessoryType type : AccessoryType.values()) {
+			available.add(type.name().toLowerCase());
+			Collections.sort(available, String.CASE_INSENSITIVE_ORDER);
 		}
 		return available;
 	}
-
-	public void onSelected(int item) {
-		if (lw != null && item != -1) {
-			current = AccessoryType.values()[item];
+	
+	public void onSelected(String item) {
+		if (lw != null && item != null) {			
+			current = AccessoryType.valueOf((item.toUpperCase()));			
 			updateList();
 			updateSelection();
 			updateTexture();
+			
+			if (player.hasPermission("PlayerPlus.use." + current)) {
+				select.setEnabled(true);
+			} else {
+				select.setEnabled(false);
+			}
 		}
 	}
 

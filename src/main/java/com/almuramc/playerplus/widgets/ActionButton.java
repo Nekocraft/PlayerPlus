@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.znickq.playerplus.widgets;
+package com.almuramc.playerplus.widgets;
 
-import me.znickq.playerplus.TextureChooser;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
+
+import com.almuramc.playerplus.TextureChooser;
 
 /**
  *

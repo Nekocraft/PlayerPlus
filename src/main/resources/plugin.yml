@@ -1,5 +1,49 @@
 name: PlayerPlus
-main: me.znickq.playerplus.PlayerPlus
+main: com.almuramc.playerplus.PlayerPlus
 version: 0.1
-authors: [ZNickq]
+authors: [AlmuraDev]
 depend: [Spout]
+permissions:
+    playerplus.*:
+        description: Gives access to all playerplus abilities
+        children:
+            playerplus.use: true            
+            playerplus.bracelet: true
+            playerplus.ears: true
+            playerplus.sunglasses: true
+            playerplus.tail: true
+            playerplus.tophat: true
+            playerplus.wings: true
+            playerplus.title: true
+            playerplus.capes: true
+            playerplus.effects: true        
+    playerplus.use:
+        description: Allows users to be use PlayerPlus Interface
+        default: op    
+    playerplus.bracelet:
+        description: Allow Bracelet
+        default: op
+    playerplus.ears:
+        description: Allow Earings
+        default: op
+    playerplus.sunglasses:
+        description: Allow Sunglasses
+        default: op
+    playerplus.tail:
+        description: Allow Tails
+        default: op
+    playerplus.tophat:
+        description: Allow Tophats
+        default: op
+    playerplus.wings:
+        description: Allow Wings
+        default: op
+    playerplus.title:
+        description: Allow Titles
+        default: op
+    playerplus.capes:
+        description: Allow Capes
+        default: op
+    playerplus.effects:
+        description: Allow Effects
+        default: op        

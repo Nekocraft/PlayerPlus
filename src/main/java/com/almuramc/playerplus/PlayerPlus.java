@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.znickq.playerplus;
+package com.almuramc.playerplus;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
@@ -32,11 +35,11 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 
 	private static PlayerPlus instance;
 	public static String hotkeys = null;
-	
+
 	public static PlayerPlus getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public void onDisable() {
 	}
@@ -84,16 +87,34 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		return toRet;
 	}
 
-		
+
 	@EventHandler
 	public void onSpoutcraftAuth(SpoutCraftEnableEvent event) {
-		for(AccessoryType ttype : AccessoryType.values()) {
-			String url = get(event.getPlayer().getName(), ttype);
-			if(url != null) {
-				event.getPlayer().addAccessory(ttype, url);
+		SpoutPlayer sPlayer = event.getPlayer();
+
+		if (!sPlayer.hasPermission("PlayerPlus.use")) {
+			for(AccessoryType ttype : AccessoryType.values()) {
+				String url = get(event.getPlayer().getName(), ttype);		
+				sPlayer.removeAccessory(ttype);
+			}
+		}
+
+		if (sPlayer.hasPermission("PlayerPlus.use")) {
+			for(AccessoryType ttype : AccessoryType.values()) {
+				String url = get(event.getPlayer().getName(), ttype);
+				if (event.getPlayer().hasPermission("PlayerPlus.use." + ttype.toString())) {
+					if(url != null) {
+						event.getPlayer().addAccessory(ttype, url);				
+					}	
+				} else {
+					sPlayer.removeAccessory(ttype);
+				}
+				
 			}
 		}
 	}
+
+	
 	
 	public String get(String player, AccessoryType type) {
 		File saveFile = new File(getDataFolder(), "saved.yml");
