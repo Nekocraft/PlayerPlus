@@ -102,7 +102,7 @@ public class TextureChooser extends GenericPopup {
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(20).setWidth(50);
 		close.shiftXPos(150).shiftYPos(95);
-		updateSelection();
+		//updateSelection();
 
 		attachWidgets(instance, border, label, label1, lw, cb, gt, pre, select, next, close);
 		player.getMainScreen().attachPopupScreen(this);
