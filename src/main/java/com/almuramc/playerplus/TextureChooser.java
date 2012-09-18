@@ -144,8 +144,7 @@ public class TextureChooser extends GenericPopup {
 		for (AccessoryType type : AccessoryType.values()) {
 			available.add(type.name().toLowerCase());			
 		}
-		available.add("capes");
-		available.add("titles");
+		available.add("capes");		
 		Collections.sort(available, String.CASE_INSENSITIVE_ORDER);
 		cb.setItems(available);
 		cb.setDirty(true);
@@ -174,7 +173,7 @@ public class TextureChooser extends GenericPopup {
 					select.setEnabled(false);
 				}
 			}
-			if (item == "capes") {
+			if (item.equalsIgnoreCase("capes")) {
 				currentAddon = item;
 				addonType = 2;
 				updateCapesList();
@@ -201,6 +200,7 @@ public class TextureChooser extends GenericPopup {
 				if (addonType == 2) {
 					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());
 					//player.setTitle(ChatColor.GOLD + "~Dockter\n" + ChatColor.BLUE + "Almura Moderator");
+					instance.saveCape(player);
 					
 				} else {
 					player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
@@ -214,10 +214,8 @@ public class TextureChooser extends GenericPopup {
 					instance.save(player, current);
 				}
 			}
-			System.out.println("Cape: " + player.getCape());
-			System.out.println("Cape: " + player.getTitle());
-			
-			player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
+
+			// player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
 			player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");
 			
 			return;

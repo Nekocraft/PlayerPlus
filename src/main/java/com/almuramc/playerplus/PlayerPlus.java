@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,8 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
+import org.getspout.spout.Spout;
+import org.getspout.spout.player.SpoutCraftPlayer;
 
 /**
  *
@@ -127,10 +130,50 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 						event.getPlayer().addAccessory(ttype, url);				
 					}	
 				} else {
-					sPlayer.removeAccessory(ttype);
-				}
-				
+					sPlayer.removeAccessory(ttype);					
+				}			
 			}
+			if (event.getPlayer().hasPermission("PlayerPlus.use.capes")) {				
+				String url = getCape(event.getPlayer().getName(), "CAPES");
+				if (url != null)
+					sPlayer.setCape(url);				
+			} else {
+				 sPlayer.resetCape();
+			}
+			
+		}
+		
+		if (sPlayer.hasPermission("PlayerPlus.title")) {
+			if (sPlayer.hasPermission("Guest.title") && !sPlayer.hasPermission("Member.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.GRAY+"Guest");				
+			}
+			if (sPlayer.hasPermission("Member.title") && !sPlayer.hasPermission("SuperMember.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.YELLOW+"Member");				
+			}
+			if (sPlayer.hasPermission("SuperMember.title") && !sPlayer.hasPermission("UltraMember.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_GREEN+"SuperMember");				
+			}
+			if (sPlayer.hasPermission("Ultra.title") && !sPlayer.hasPermission("CreativeMember.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.GOLD+"UltraMember");				
+			}
+			if (sPlayer.hasPermission("CreativeMember.title") && !sPlayer.hasPermission("Mod.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.LIGHT_PURPLE+"CreativeMember");				
+			}
+			if (sPlayer.hasPermission("Dev.title") && !sPlayer.hasPermission("admin.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_BLUE+"Developer");				
+			}
+			if (sPlayer.hasPermission("mod.title") && !sPlayer.hasPermission("Admin.title")) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_BLUE+"Moderator");
+			}
+			if (sPlayer.hasPermission("admin.title") && !sPlayer.isOp()) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_RED+"Almura Admin");
+			}
+			if (sPlayer.hasPermission("admin.title") && sPlayer.isOp()) {
+				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_RED+"Almura SuperAdmin");
+			}
+			SpoutCraftPlayer player = (SpoutCraftPlayer)SpoutCraftPlayer.getPlayer(event.getPlayer());			
+			player.doPostPlayerChangeWorld();
+			
 		}
 	}
 
@@ -148,6 +191,19 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		return yFile.getString(player+"."+type.name());
 	}
+	
+	public String getCape(String player, String type) {
+		File saveFile = new File(getDataFolder(), "saved.yml");
+		if (!saveFile.exists()) {
+			try {
+				saveFile.createNewFile();
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
+		return yFile.getString(player+"."+"CAPES");
+	}
 
 	public void save(SpoutPlayer player, AccessoryType type) {
 		File saveFile = new File(getDataFolder(), "saved.yml");
@@ -158,10 +214,28 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		 }
-		//ToDo: Add saving for Capes and Titles
-		
+				
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		yFile.set(player.getName()+"."+type.name()+"", player.getAccessoryURL(type));
+		try {
+			yFile.save(saveFile);
+		} catch (IOException ex) {
+			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	public void saveCape(SpoutPlayer player) {
+		File saveFile = new File(getDataFolder(), "saved.yml");
+		if (!saveFile.exists()) {
+			try {
+				saveFile.createNewFile();
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		 }
+		
+		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
+		yFile.set(player.getName()+"."+"CAPES", player.getCape());
 		try {
 			yFile.save(saveFile);
 		} catch (IOException ex) {

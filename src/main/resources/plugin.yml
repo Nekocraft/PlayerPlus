@@ -9,39 +9,43 @@ permissions:
         children:
             playerplus.use: true            
             playerplus.bracelet: true
-            playerplus.ears: true
-            playerplus.sunglasses: true
-            playerplus.tail: true
-            playerplus.tophat: true
-            playerplus.wings: true
+            playerplus.use.ears: true
+            playerplus.use.sunglasses: true
+            playerplus.use.tail: true
+            playerplus.use.tophat: true
+            playerplus.use.notchhat: true
+            playerplus.use.wings: true
             playerplus.title: true
-            playerplus.capes: true
-            playerplus.effects: true        
+            playerplus.use.capes: true
+            playerplus.effects: true            
     playerplus.use:
         description: Allows users to be use PlayerPlus Interface
         default: op    
-    playerplus.bracelet:
+    playerplus.use.bracelet:
         description: Allow Bracelet
         default: op
-    playerplus.ears:
+    playerplus.use.ears:
         description: Allow Earings
         default: op
-    playerplus.sunglasses:
+    playerplus.use.sunglasses:
         description: Allow Sunglasses
         default: op
-    playerplus.tail:
+    playerplus.use.tail:
         description: Allow Tails
         default: op
-    playerplus.tophat:
+    playerplus.use.tophat:
         description: Allow Tophats
         default: op
-    playerplus.wings:
+    playerplus.use.notchhat:
+        description: Allow Notchhats
+        default: op        
+    playerplus.use.wings:
         description: Allow Wings
         default: op
     playerplus.title:
         description: Allow Titles
         default: op
-    playerplus.capes:
+    playerplus.use.capes:
         description: Allow Capes
         default: op
     playerplus.effects:
