@@ -30,10 +30,6 @@ import org.getspout.spoutapi.player.accessories.AccessoryType;
 import org.getspout.spout.Spout;
 import org.getspout.spout.player.SpoutCraftPlayer;
 
-/**
- *
- * @author ZNickq & Dockter
- */
 public class PlayerPlus extends JavaPlugin implements Listener {
 
 	private static PlayerPlus instance;
@@ -70,12 +66,12 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 	}
 
 	public List<WebAccessory> getAvailable(AccessoryType type) {
+		// Accessories
 		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
 		File adr = new File(getDataFolder(), type.toString().toLowerCase() + ".yml");
 		try {
 			adr.createNewFile();
-			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);
-			// temp.addDefault("Name", "URL");
+			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);			
 			temp.options().copyDefaults(true);
 			temp.save(adr);
 		} catch (IOException ex) {
@@ -91,12 +87,12 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 	}
 
 	public List<WebAccessory> getCapes() {
+		// Capes, to be used until Capes are moved into the AccessoryType Class
 		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
 		File adr = new File(getDataFolder(), "capes.yml");
 		try {
 			adr.createNewFile();
-			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);
-			//temp.addDefault("Name", "URL");
+			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);			
 			temp.options().copyDefaults(true);
 			temp.save(adr);
 		} catch (IOException ex) {
@@ -134,50 +130,16 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 				}			
 			}
 			if (event.getPlayer().hasPermission("PlayerPlus.use.capes")) {				
+				// Capes will not apply to usernames that exist in the VIP.yml, bug in Spoutcraft
+				// TODO:  Fix Spoutcraft VIP.yml bug.
 				String url = getCape(event.getPlayer().getName(), "CAPES");
 				if (url != null)
 					sPlayer.setCape(url);				
 			} else {
 				 sPlayer.resetCape();
-			}
-			
-		}
-		
-		if (sPlayer.hasPermission("PlayerPlus.title")) {
-			if (sPlayer.hasPermission("Guest.title") && !sPlayer.hasPermission("Member.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.GRAY+"Guest");				
-			}
-			if (sPlayer.hasPermission("Member.title") && !sPlayer.hasPermission("SuperMember.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.YELLOW+"Member");				
-			}
-			if (sPlayer.hasPermission("SuperMember.title") && !sPlayer.hasPermission("UltraMember.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_GREEN+"SuperMember");				
-			}
-			if (sPlayer.hasPermission("Ultra.title") && !sPlayer.hasPermission("CreativeMember.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.GOLD+"UltraMember");				
-			}
-			if (sPlayer.hasPermission("CreativeMember.title") && !sPlayer.hasPermission("Mod.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.LIGHT_PURPLE+"CreativeMember");				
-			}
-			if (sPlayer.hasPermission("Dev.title") && !sPlayer.hasPermission("admin.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_BLUE+"Developer");				
-			}
-			if (sPlayer.hasPermission("mod.title") && !sPlayer.hasPermission("Admin.title")) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_BLUE+"Moderator");
-			}
-			if (sPlayer.hasPermission("admin.title") && !sPlayer.isOp()) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_RED+"Almura Admin");
-			}
-			if (sPlayer.hasPermission("admin.title") && sPlayer.isOp()) {
-				sPlayer.setTitle(sPlayer.getDisplayName()+"\n"+ChatColor.DARK_RED+"Almura SuperAdmin");
-			}
-			SpoutCraftPlayer player = (SpoutCraftPlayer)SpoutCraftPlayer.getPlayer(event.getPlayer());			
-			player.doPostPlayerChangeWorld();
-			
-		}
+			}			
+		}	
 	}
-
-	
 	
 	public String get(String player, AccessoryType type) {
 		File saveFile = new File(getDataFolder(), "saved.yml");

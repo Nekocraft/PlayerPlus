@@ -4,10 +4,6 @@
  */
 package com.almuramc.playerplus;
 
-/**
- *
- * @author ZNickq
- */
 public class WebAccessory {
 	private String name, url;
 	

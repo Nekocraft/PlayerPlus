@@ -23,10 +23,6 @@ import org.getspout.spoutapi.player.accessories.AccessoryType;
 
 import com.almuramc.playerplus.widgets.*;
 
-/**
- *
- * @author ZNickq
- */
 public class TextureChooser extends GenericPopup {
 
 	private PlayerPlus instance;
@@ -102,8 +98,7 @@ public class TextureChooser extends GenericPopup {
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(20).setWidth(50);
 		close.shiftXPos(150).shiftYPos(95);
-		//updateSelection();
-
+	
 		attachWidgets(instance, border, label, label1, lw, cb, gt, pre, select, next, close);
 		player.getMainScreen().attachPopupScreen(this);
 		updateTexture();
@@ -198,8 +193,7 @@ public class TextureChooser extends GenericPopup {
 			if (lw.getSelectedRow() > 0) {
 				System.out.println("Selection: " + cb.getText());
 				if (addonType == 2) {
-					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());
-					//player.setTitle(ChatColor.GOLD + "~Dockter\n" + ChatColor.BLUE + "Almura Moderator");
+					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());					
 					instance.saveCape(player);
 					
 				} else {
@@ -215,7 +209,7 @@ public class TextureChooser extends GenericPopup {
 				}
 			}
 
-			// player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
+			player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
 			player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");
 			
 			return;
@@ -237,8 +231,6 @@ public class TextureChooser extends GenericPopup {
 	private void updateSelection() {
 		int which = 0;
 		String url = null;
-		
-		// Todo:  Update to support Capes and Titles
 		
 		url = player.getAccessoryURL(current);
 		

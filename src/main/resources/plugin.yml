@@ -1,6 +1,6 @@
 name: PlayerPlus
 main: com.almuramc.playerplus.PlayerPlus
-version: 0.1
+version: 1.0
 authors: [AlmuraDev]
 depend: [Spout]
 permissions:
