@@ -51,6 +51,8 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		config.addDefault("TitleX", 190);
 		config.addDefault("Hot_Key", "KEY_U");
 		config.addDefault("GUITexture", "http://www.pixentral.com/pics/1duZT49LzMnodP53SIPGIqZ8xdKS.png");
+		config.addDefault("ForceDefaultCape", true);
+		config.addDefault("DefaultCape", "http://www.almuramc.com/playerplus/capes/almuracape.png");
 		config.options().copyDefaults(true);
 		saveConfig();
 		getServer().getPluginManager().registerEvents(this, this);
@@ -61,6 +63,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 				SpoutManager.getFileManager().addToPreLoginCache(this, wa.getUrl());
 			}
 		}
+			
 		hotkeys = config.getString("Hot_Key");
 		SpoutManager.getKeyBindingManager().registerBinding("PlayerPlus", Keyboard.valueOf(PlayerPlus.hotkeys), "Opens Player Plus Accessories", new InputHandler(), PlayerPlus.getInstance());
 	}
@@ -69,15 +72,44 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		// Accessories
 		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
 		File adr = new File(getDataFolder(), type.toString().toLowerCase() + ".yml");
-		try {
-			adr.createNewFile();
-			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);			
-			temp.options().copyDefaults(true);
-			temp.save(adr);
-		} catch (IOException ex) {
-			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+		if (!adr.exists()) {
+			try {
+				adr.createNewFile();
+				YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);				
+				if (type.toString().equalsIgnoreCase("bracelet")) {
+					temp.addDefault("Green and Silver", "http://www.almuramc.com/playerplus/bracelet/pp-bc-4.png");
+					temp.addDefault("Black Stripes", "http://www.almuramc.com/playerplus/bracelet/pp-bc-618.png");					
+				}
+				if (type.toString().equalsIgnoreCase("ears")) {
+					temp.addDefault("Rainbow", "http://www.almuramc.com/playerplus/ears/pp-er-27.png");
+					temp.addDefault("Blue White", "http://www.almuramc.com/playerplus/ears/pp-er-1667.png");					
+				}
+				if (type.toString().equalsIgnoreCase("notchhat")) {
+					temp.addDefault("Black and Blue", "http://www.almuramc.com/playerplus/notchhat/pp-nh-48.png");
+					temp.addDefault("Red Stripes", "http://www.almuramc.com/playerplus/notchhat/pp-nh-801.png");
+				}
+				if (type.toString().equalsIgnoreCase("sunglasses")) {
+					temp.addDefault("Black", "http://www.almuramc.com/playerplus/sunglasses/sun_black_1.png");
+					temp.addDefault("Red", "http://www.almuramc.com/playerplus/sunglasses/sun_red_1.png");
+				}
+				if (type.toString().equalsIgnoreCase("tail")) {
+					temp.addDefault("Blue Tail", "http://www.almuramc.com/playerplus/tail/pp-tl-1083.png");
+					temp.addDefault("Red Tails", "http://www.almuramc.com/playerplus/tail/pp-tl-1217.png");
+				}
+				if (type.toString().equalsIgnoreCase("tophat")) {
+					temp.addDefault("Black Tophat", "http://www.almuramc.com/playerplus/tophat/pp-th-23.png");
+					temp.addDefault("Red TopHat", "http://www.almuramc.com/playerplus/tophat/pp-th-1455.png");
+				}
+				if (type.toString().equalsIgnoreCase("wings")) {
+					temp.addDefault("Fire Wings", "http://www.almuramc.com/playerplus/wings/pp-wg-30.png");
+					temp.addDefault("White Wings", "http://www.almuramc.com/playerplus/wings/pp-wg-9.png");
+				}
+				temp.options().copyDefaults(true);
+				temp.save(adr);
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
-
 		YamlConfiguration ycf = YamlConfiguration.loadConfiguration(adr);
 		for (String name : ycf.getKeys(false)) {
 			toRet.add(new WebAccessory(name, ycf.getString(name)));
@@ -90,15 +122,18 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		// Capes, to be used until Capes are moved into the AccessoryType Class
 		List<WebAccessory> toRet = new ArrayList<WebAccessory>();		
 		File adr = new File(getDataFolder(), "capes.yml");
-		try {
-			adr.createNewFile();
-			YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);			
-			temp.options().copyDefaults(true);
-			temp.save(adr);
-		} catch (IOException ex) {
-			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+		if (!adr.exists()) {
+			try {
+				adr.createNewFile();
+				YamlConfiguration temp = YamlConfiguration.loadConfiguration(adr);				
+				temp.addDefault("Spout Cape", "http://www.almuramc.com/playerplus/capes/spoutcape.png");
+				temp.addDefault("Almura Cape", "http://www.almuramc.com/playerplus/capes/almuracape.png");								
+				temp.options().copyDefaults(true);
+				temp.save(adr);
+			} catch (IOException ex) {
+				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
-
 		YamlConfiguration ycf = YamlConfiguration.loadConfiguration(adr);
 		for (String name : ycf.getKeys(false)) {
 			toRet.add(new WebAccessory(name, ycf.getString(name)));
@@ -110,7 +145,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onSpoutcraftAuth(SpoutCraftEnableEvent event) {
 		SpoutPlayer sPlayer = event.getPlayer();
-
+	
 		if (!sPlayer.hasPermission("PlayerPlus.use")) {
 			for(AccessoryType ttype : AccessoryType.values()) {
 				String url = get(event.getPlayer().getName(), ttype);		
@@ -129,18 +164,22 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 					sPlayer.removeAccessory(ttype);					
 				}			
 			}
+			
 			if (event.getPlayer().hasPermission("PlayerPlus.use.capes")) {				
-				// Capes will not apply to usernames that exist in the VIP.yml, bug in Spoutcraft
-				// TODO:  Fix Spoutcraft VIP.yml bug.
 				String url = getCape(event.getPlayer().getName(), "CAPES");
-				if (url != null)
-					sPlayer.setCape(url);				
+				if (url != null) {
+					sPlayer.setCape(url);
+				} else {
+					if (PlayerPlus.getInstance().getConfig().getBoolean("ForceDefaultCape")) {
+						sPlayer.setCape(PlayerPlus.getInstance().getConfig().getString("DefaultCape"));
+					}
+				}
 			} else {
-				 sPlayer.resetCape();
-			}			
+				sPlayer.resetCape();
+			}
 		}	
 	}
-	
+
 	public String get(String player, AccessoryType type) {
 		File saveFile = new File(getDataFolder(), "saved.yml");
 		if (!saveFile.exists()) {
@@ -153,7 +192,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		return yFile.getString(player+"."+type.name());
 	}
-	
+
 	public String getCape(String player, String type) {
 		File saveFile = new File(getDataFolder(), "saved.yml");
 		if (!saveFile.exists()) {
@@ -175,8 +214,8 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 			} catch (IOException ex) {
 				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		 }
-				
+		}
+
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		yFile.set(player.getName()+"."+type.name()+"", player.getAccessoryURL(type));
 		try {
@@ -185,7 +224,7 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 			Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
 	public void saveCape(SpoutPlayer player) {
 		File saveFile = new File(getDataFolder(), "saved.yml");
 		if (!saveFile.exists()) {
@@ -194,8 +233,8 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 			} catch (IOException ex) {
 				Logger.getLogger(PlayerPlus.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		 }
-		
+		}
+
 		YamlConfiguration yFile = YamlConfiguration.loadConfiguration(saveFile);
 		yFile.set(player.getName()+"."+"CAPES", player.getCape());
 		try {

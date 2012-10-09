@@ -191,15 +191,16 @@ public class TextureChooser extends GenericPopup {
 	public void onActionClick(int id) {
 		if (id == 0) {
 			if (lw.getSelectedRow() > 0) {
-				System.out.println("Selection: " + cb.getText());
 				if (addonType == 2) {
-					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());					
+					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());
 					instance.saveCape(player);
-					
+					player.sendNotification("Accessory Applied", "Cape", Material.GOLD_CHESTPLATE);
 				} else {
 					player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
-					instance.save(player, current);					
+					instance.save(player, current);
+					player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
 				}
+				player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");	
 			} else {				
 				if (addonType == 2) {
 					player.resetCape();
@@ -207,11 +208,7 @@ public class TextureChooser extends GenericPopup {
 					player.removeAccessory(current);
 					instance.save(player, current);
 				}
-			}
-
-			player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
-			player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");
-			
+			}			
 			return;
 		}
 		int cuRow = lw.getSelectedRow();

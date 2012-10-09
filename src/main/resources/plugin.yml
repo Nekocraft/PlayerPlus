@@ -1,6 +1,6 @@
 name: PlayerPlus
 main: com.almuramc.playerplus.PlayerPlus
-version: 1.0
+version: 1.2
 authors: [AlmuraDev]
 depend: [Spout]
 permissions:
@@ -8,16 +8,14 @@ permissions:
         description: Gives access to all playerplus abilities
         children:
             playerplus.use: true            
-            playerplus.bracelet: true
+            playerplus.use.bracelet: true
             playerplus.use.ears: true
             playerplus.use.sunglasses: true
             playerplus.use.tail: true
             playerplus.use.tophat: true
             playerplus.use.notchhat: true
-            playerplus.use.wings: true
-            playerplus.title: true
-            playerplus.use.capes: true
-            playerplus.effects: true            
+            playerplus.use.wings: true            
+            playerplus.use.capes: true                   
     playerplus.use:
         description: Allows users to be use PlayerPlus Interface
         default: op    
@@ -47,7 +45,4 @@ permissions:
         default: op
     playerplus.use.capes:
         description: Allow Capes
-        default: op
-    playerplus.effects:
-        description: Allow Effects
-        default: op        
+        default: op    
