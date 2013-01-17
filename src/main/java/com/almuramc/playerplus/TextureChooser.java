@@ -117,9 +117,9 @@ public class TextureChooser extends GenericPopup {
 	public void updateList() {
 		lw.clear();
 		list = instance.getAvailable(current);
-		lw.addItem(new ListWidgetItem("None", ""));
+		lw.addItem(new ListWidgetItem("None", "Clears Accessory"));
 		for (WebAccessory toAdd : list) {
-			lw.addItem(new ListWidgetItem(toAdd.getName(), "", toAdd.getUrl()));
+			lw.addItem(new ListWidgetItem(toAdd.getName(), ""));
 		}
 		lw.setDirty(true);
 	}
@@ -127,9 +127,9 @@ public class TextureChooser extends GenericPopup {
 	public void updateCapesList() {
 		lw.clear();
 		list = instance.getCapes();
-		lw.addItem(new ListWidgetItem("None", ""));
+		lw.addItem(new ListWidgetItem("None", "Clears Accessory"));
 		for (WebAccessory toAdd : list) {
-			lw.addItem(new ListWidgetItem(toAdd.getName(), "", toAdd.getUrl()));
+			lw.addItem(new ListWidgetItem(toAdd.getName(), ""));
 		}
 		lw.setDirty(true);
 	}
