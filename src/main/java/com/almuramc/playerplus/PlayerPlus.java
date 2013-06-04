@@ -29,6 +29,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
 import org.getspout.spout.Spout;
 import org.getspout.spout.player.SpoutCraftPlayer;
+import org.mcstats.MetricsLite;
 
 public class PlayerPlus extends JavaPlugin implements Listener {
 
@@ -66,6 +67,11 @@ public class PlayerPlus extends JavaPlugin implements Listener {
 			
 		hotkeys = config.getString("Hot_Key");
 		SpoutManager.getKeyBindingManager().registerBinding("PlayerPlus", Keyboard.valueOf(PlayerPlus.hotkeys), "Opens Player Plus Accessories", new InputHandler(), PlayerPlus.getInstance());
+        try {
+            MetricsLite metrics = new MetricsLite(this);
+            metrics.start();
+        } catch (IOException e) {
+        }
 	}
 
 	public List<WebAccessory> getAvailable(AccessoryType type) {
