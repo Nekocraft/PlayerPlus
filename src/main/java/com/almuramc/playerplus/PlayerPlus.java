@@ -1,6 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of PlayerPlus.
+ *
+ * Copyright (c) 2012, AlmuraDev <http://www.almuradev.com/>
+ * PlayerPlus is licensed under the Almura Development License.
+ *
+ * PlayerPlus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PlayerPlus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License. If not,
+ * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
 package com.almuramc.playerplus;
 
@@ -11,24 +26,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.event.input.KeyPressedEvent;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
-import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.player.accessories.AccessoryType;
-import org.getspout.spout.Spout;
-import org.getspout.spout.player.SpoutCraftPlayer;
 import org.mcstats.MetricsLite;
 
 public class PlayerPlus extends JavaPlugin implements Listener {
