@@ -70,13 +70,13 @@ public class TextureChooser extends GenericPopup {
 		label.setScale(1.2F).setWidth(-1).setHeight(-1);
 
 		GenericLabel label1 = new GenericLabel();
-		label1.setText("Images represent the map of the image, not actual appearence.");
+		label1.setText("图片代表地图的图像, 而不是实际的外观类型.");
 		label1.setAnchor(WidgetAnchor.CENTER_CENTER);
 		label1.shiftXPos(-190).shiftYPos(100);	
 		label1.setScale(1.0F).setWidth(-1).setHeight(-1);
 
 		cb = new MyComboBox(this);
-		cb.setText("Accessories");
+		cb.setText("饰品");
 		cb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cb.shiftXPos(-190).shiftYPos(-90);
 		cb.setHeight(20).setWidth(150);
@@ -98,7 +98,7 @@ public class TextureChooser extends GenericPopup {
 		pre.setHeight(20).setWidth(20);
 		pre.shiftXPos(10).shiftYPos(65);
 
-		select = new ActionButton("Select", this, 0);
+		select = new ActionButton("选择", this, 0);
 		select.setAnchor(WidgetAnchor.CENTER_CENTER);
 		select.setHeight(20).setWidth(50);
 		select.shiftXPos(55).shiftYPos(65);
@@ -132,7 +132,7 @@ public class TextureChooser extends GenericPopup {
 	public void updateList() {
 		lw.clear();
 		list = instance.getAvailable(current);
-		lw.addItem(new ListWidgetItem("None", "Clears Accessory"));
+		lw.addItem(new ListWidgetItem("无", "清除附件"));
 		for (WebAccessory toAdd : list) {
 			lw.addItem(new ListWidgetItem(toAdd.getName(), ""));
 		}
@@ -142,7 +142,7 @@ public class TextureChooser extends GenericPopup {
 	public void updateCapesList() {
 		lw.clear();
 		list = instance.getCapes();
-		lw.addItem(new ListWidgetItem("None", "Clears Accessory"));
+		lw.addItem(new ListWidgetItem("无", "清除附件"));
 		for (WebAccessory toAdd : list) {
 			lw.addItem(new ListWidgetItem(toAdd.getName(), ""));
 		}
@@ -209,13 +209,13 @@ public class TextureChooser extends GenericPopup {
 				if (addonType == 2) {
 					player.setCape(list.get(lw.getSelectedRow() - 1).getUrl());
 					instance.saveCape(player);
-					player.sendNotification("Accessory Applied", "Cape", Material.GOLD_CHESTPLATE);
+					player.sendNotification("应用配件", "披风", Material.GOLD_CHESTPLATE);
 				} else {
 					player.addAccessory(current, list.get(lw.getSelectedRow() - 1).getUrl());
 					instance.save(player, current);
-					player.sendNotification("Accessory Applied", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
+					player.sendNotification("应用配件", current.name().toLowerCase(), Material.GOLD_CHESTPLATE);
 				}
-				player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - Accessory Applied!");	
+				player.sendMessage(ChatColor.GOLD + "[PlayerPlus]" + ChatColor.WHITE + " - 配件已应用!");	
 			} else {				
 				if (addonType == 2) {
 					player.resetCape();

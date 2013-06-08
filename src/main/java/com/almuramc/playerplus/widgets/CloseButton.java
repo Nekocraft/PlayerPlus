@@ -29,12 +29,12 @@ public class CloseButton extends GenericButton {
 	private PlayerPlus i;
 
 	public CloseButton(PlayerPlus i) {
-		super("Close");
+		super("关闭");
 		this.i = i;
 	}
 
 	public CloseButton(boolean openMain) {
-		super("Close");
+		super("关闭");
 	}
 
 	@Override

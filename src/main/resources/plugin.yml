@@ -5,44 +5,44 @@ authors: [AlmuraDev]
 depend: [Spout]
 permissions:
     playerplus.*:
-        description: Gives access to all playerplus abilities
+        description: 给予PlayerPlus的全部使用权限
         children:
-            playerplus.use: true            
+            playerplus.use: true
             playerplus.use.bracelet: true
             playerplus.use.ears: true
             playerplus.use.sunglasses: true
             playerplus.use.tail: true
             playerplus.use.tophat: true
             playerplus.use.notchhat: true
-            playerplus.use.wings: true            
-            playerplus.use.capes: true                   
+            playerplus.use.wings: true
+            playerplus.use.capes: true
     playerplus.use:
-        description: Allows users to be use PlayerPlus Interface
+        description: 允许用户使用 PlayerPlus 接口
         default: op    
     playerplus.use.bracelet:
-        description: Allow Bracelet
+        description: 允许手镯
         default: op
     playerplus.use.ears:
-        description: Allow Earings
+        description: 允许耳环
         default: op
     playerplus.use.sunglasses:
-        description: Allow Sunglasses
+        description: 允许墨镜
         default: op
     playerplus.use.tail:
-        description: Allow Tails
+        description: 允许尾巴
         default: op
     playerplus.use.tophat:
-        description: Allow Tophats
+        description: 允许帽子
         default: op
     playerplus.use.notchhat:
-        description: Allow Notchhats
+        description: 允许Notch帽子
         default: op        
     playerplus.use.wings:
-        description: Allow Wings
+        description: 允许翅膀
         default: op
     playerplus.title:
-        description: Allow Titles
+        description: 允许标题
         default: op
     playerplus.use.capes:
-        description: Allow Capes
+        description: 允许披风
         default: op    
